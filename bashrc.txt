@@ -1,0 +1,81 @@
+if [ -x /usr/bin/dircolors ]; 
+then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto -i'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+
+alias rm='rm -i'
+alias cp='cp -i'
+alias mv='mv -i'
+
+
+black_bold='\[\033[01;30m\]'
+red_bold='\[\033[01;31m\]'
+green_bold='\[\033[01;32m\]'
+yellow_bold='\[\033[01;33m\]'
+blue_bold='\[\033[01;34m\]'
+purple_bold='\[\033[01;35m\]'
+cyan_bold='\[\033[01;36m\]'
+white_bold='\[\033[01;37m\]'
+black='\[\033[00;30m\]'
+red='\[\033[00;31m\]'
+green='\[\033[00;32m\]'
+yellow='\[\033[00;33m\]'
+blue='\[\033[00;34m\]'
+purple='\[\033[00;35m\]'
+cyan='\[\033[00;36m\]'
+white='\[\033[00;37m\]'
+clear='\[\033[00m\]'
+orange='\[\033[38;2;255;165;0m\]'
+pink='\[\033[38;2;255;192;203m\]'
+neon_pink='\[\033[38;2;251;72;196m\]'
+neon_pink_bold='\[\033[1;38;2;251;72;196m\]'
+neon_orange_bold='\[\033[1;38;2;255;158;61m\]'
+
+
+parse_git_branch()
+{
+  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/[\1]/'
+}
+
+
+date=$(date "+%d/%m/%y")
+time=$(date "+%H:%M")
+
+
+PS1="${yellow_bold}┌──(\u@\h) - [\w]\n└─\$(parse_git_branch)$ ${clear}"
+
+
+alias ll='ls -al'
+alias ..='cd ..'
+alias cls='clear'
+alias py='python3'
+alias die='shutdown now'
+alias bash='nano ~/.bashrc'
+alias sorc='source ~/.bashrc'
+alias wgcc='x86_64-w64-mingw32-gcc-10-win32'
+alias upd='sudo apt --fix-broken install -y && sudo apt update -y && sudo apt upgrade -y && flatpak update -y && sudo apt autoremove -y && sudo apt autoclean -y'
+alias venv='source ~/.venv/bin/activate'
+alias bat='upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep -E "state|percentage|time to empty|time to full|capacity|charge-cycles"'
+alias copy='xclip -sel clip'
+alias del='rm -rf'
+function mkcd 
+{
+  last=$(eval "echo \$$#")
+  if [ ! -n "$last" ]; 
+  then
+    echo "Enter a directory name"
+  elif [ -d $last ]; 
+  then
+    echo "\`$last' already exists"
+  else
+    mkdir $@ && cd $last
+  fi
+}
