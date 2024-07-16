@@ -40,17 +40,25 @@ neon_pink_bold='\[\033[1;38;2;251;72;196m\]'
 neon_orange_bold='\[\033[1;38;2;255;158;61m\]'
 
 
-parse_git_branch()
+prompt_branch() 
 {
-  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/[\1]/'
+    local branch
+    if git rev-parse --is-inside-work-tree &> /dev/null; 
+    then
+        branch=$(git symbolic-ref --quiet --short HEAD 2> /dev/null || git describe --tags --exact-match 2> /dev/null || git rev-parse --short HEAD 2> /dev/null)
+        if [[ -z $branch ]]; 
+        then
+            branch="(no commits yet)"
+        fi
+        echo " ($branch)"
+    fi
 }
-
 
 date=$(date "+%d/%m/%y")
 time=$(date "+%H:%M")
 
-
-PS1="${yellow_bold}┌──(\u@\h) - [\w]\n└─\$(parse_git_branch)$ ${clear}"
+PROMPT_COMMAND='PS1="${yellow_bold}┌──(\u@\h) - [\w]\n└─$(prompy_branch)$ ${clear}"'
+PROMPT_COMMAND='PS1="╔ ${orange}\u${clear}@${green}\h${clear}:${neon_pink}\w ${red}$(prompt_branch)${clear}\n╚ ${blue}$ ${clear}"'
 
 
 alias ll='ls -al'
